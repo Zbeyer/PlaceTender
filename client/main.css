@@ -1,4 +1,8 @@
 body {
-  padding: 10px;
+  background-color: #012;
+  color: white;
+  font-size: 120%;
+  margin: 0;
+  padding: 1em;
   font-family: sans-serif;
 }

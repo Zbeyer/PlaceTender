@@ -122,3 +122,152 @@ Meteor provides a Windows installer:
 if that link fails try https://v2-docs.meteor.com/install.html
 
 I gave up on windows 11 and switched to docker
+
+------
+
+# ⚡ Meteor Loading Strategy: Greedy Loading + Pub/Sub
+
+This project intentionally uses **Meteor’s classic greedy loading model** combined with **explicit pub/sub** for data flow. This approach keeps the app simple, predictable, and easy to reason about without relying on dynamic imports or complex module systems.
+
+------
+
+## What “Greedy Loading” Means
+
+Meteor automatically loads files based on **folder names** and **load order rules**.
+ Greedy loading means:
+
+- All files in `client/`, `server/`, and `lib/` load automatically
+- No dynamic imports
+- No code-splitting
+- No lazy loading
+- Everything is available immediately at startup
+
+This is ideal for Blaze apps where:
+
+- templates are global
+- helpers are global
+- collections are global
+- pub/sub is explicit
+- load order is predictable
+
+------
+
+## Load Order (Greedy Loading Rules)
+
+Meteor loads files in this order:
+
+1. **`lib/`**  
+    Shared code that must load early
+   - collections
+   - global helpers
+   - shared utilities
+2. **`server/`**  
+    Server-only code
+   - publications
+   - methods
+   - startup logic
+3. **`client/`**  
+    Client-only code
+   - Blaze templates
+   - event handlers
+   - subscriptions
+   - client startup
+4. **`imports/`**  
+    Only loaded when explicitly imported
+    (used sparingly in this project)
+5. **`public/` and `private/`**  
+    Static assets and server-only assets
+    (not code)
+
+This ensures a predictable, top‑down load sequence.
+
+------
+
+## Pub/Sub Strategy
+
+This project uses **explicit pub/sub** for all data access.
+
+### Server: Publications
+
+Located in:
+
+```
+/server/publications.js
+```
+
+Example:
+
+```js
+Meteor.publish('tasks.all', function () {
+  return Tasks.find({});
+});
+```
+
+### Client: Subscriptions
+
+Located in:
+
+```
+/client/startup.js
+```
+
+Example:
+
+```js
+Meteor.subscribe('tasks.all');
+```
+
+### Why explicit pub/sub?
+
+- Clear data flow
+- Easy debugging
+- Blaze templates automatically react to published data
+- No hidden magic
+- No over-fetching from insecure allow/deny rules
+
+------
+
+## Recommended Project Structure
+
+```
+/lib
+  collections.js        # Shared collections (loads first)
+  helpers.js            # Global Blaze helpers
+
+/server
+  publications.js       # All Meteor.publish calls
+  methods.js            # Meteor.methods
+  startup.js            # Server startup logic
+
+/client
+  main.html             # Root Blaze template
+  main.js               # Client startup + subscriptions
+  styles.css            # Global styles
+  /templates            # Blaze UI components
+
+/imports                # Optional modular code (used sparingly)
+
+/public                 # Static assets
+/private                # Server-only assets
+```
+
+
+----
+
+*Whenever you open a new terminal:*
+
+1. Go to your project folder
+
+   ```bat
+   cd C:\Ghub\PlaceTender
+   ```
+
+2. Start your Meteor app inside Docker
+
+   ```bat
+   docker run -it --rm -p 3000:3000 -v ${PWD}:/app placetender
+   ```
+
+3. Open your browser
+
+- http://localhost:3000/

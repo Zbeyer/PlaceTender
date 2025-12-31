@@ -271,3 +271,10 @@ Meteor.subscribe('tasks.all');
 3. Open your browser
 
 - http://localhost:3000/
+
+Mac
+
+```sh
+MONGO_URL=mongodb://localhost:27017/myApp meteor                               
+```
+

@@ -108,7 +108,7 @@ Before you start working—or anytime you want the latest version—click **Pull
 
 ### D. Using Meteor on Windows
 
-> Sometimes Window pukes out a bunch of errors on this step. If this happens you need a guide who can walk you through changing your group policy settings.
+> Sometimes Window pukes out a bunch of errors on this step. If this happens you need a guide who can walk you through changing your group policy settings. and a bunch of other configurations that may be Windows 11 specific. IDK I have never had so many hurdles getting Windows to work.
 
 Our project is built with **Meteor**, a full‑stack JavaScript framework. Most contributors use Windows, so here’s the easiest way to get set up.
 
@@ -118,6 +118,8 @@ Meteor provides a Windows installer:
 
 **Download Meteor for Windows:**  
  https://www.meteor.com/developers/install
+
+if that link fails try https://v2-docs.meteor.com/install.html
 
 Run the installer and follow the prompts. After installation, you’ll be able to use the `meteor` command in PowerShell or Command Prompt.
 
